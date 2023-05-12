@@ -1,0 +1,72 @@
+.footer{
+    width:100%;
+    height:50px;
+    background-color: red;
+    position: fixed;
+    bottom: 0px;
+    left:0px;
+}
+#paymentBtn{
+    float:right;
+    padding:10px 30px;
+    background-color: white;
+    color:red;
+    border-style: none;
+    font-size:16px;
+    border-radius: 5px;
+    position: relative;
+    bottom:60px;
+    right:10px;
+}
+#cashContent{
+    color:white;
+    font-size: 21px;
+    position: relative;
+    left: 15px;
+    bottom: 5px;
+}
+ul{
+    list-style-type: none;
+}
+
+.line{
+    position: relative;
+}
+.itemlist{
+    position: relative;
+    top:15px;
+}
+.quantity{
+    width:80px;
+    height:40px;
+    color:white;
+    background-color: red;
+    position: relative;
+    bottom: 41px;
+    left:230px;
+    border-style:none;
+    border-radius: 5px;
+}
+.btnValue{
+    position: relative;
+    left:33px;
+    bottom: 5px;
+}
+.plusBtn{
+    position: relative;
+    left:60px;
+    bottom:23px;
+}
+.minusBtn{
+    position: relative;
+    top:12px;
+    left:2px;
+}
+li:first-child{
+    color:red;
+    text-align: center;
+}
+li:nth-child(2){
+    color:red;
+    text-align: center;
+}

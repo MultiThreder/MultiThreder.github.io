@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/eccb15858b.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="cart.css">
+    <title>Cart</title>
+</head>
+<body>
+
+    <div class="content">
+        <ul id="cartItems">
+            <li>Street Foods<br><br></li>
+            <li>Cart<br><br></li>
+        </ul>
+    </div>
+    <div class="footer">
+        <p id="cashContent"></p>
+        <a href="detail.html"><button type="button" id="paymentBtn">Pay</button></a>
+    </div>
+    <script type="module">
+        let fee=0;
+        let foodorder="";
+        let i=0;
+        let arr=[];
+        let flag = 0;
+        let newTot=0;
+        let dishPrice = new Map([
+                    ["ChickenDumBriyani",125],["PlainBriyani",100],["EggDumBriyani",120],["HyderabadiChickenDumBriyani",140],
+                    ["Chicken65Briyani",150],["TandooriChickenBriyani",170],["MuttonDumBriyani",180],["HyderabadiMuttonBriyani",190],["PrawnDumBriyani",180],
+                    ["Prawn65Briyani",200],["FishDumBriyani",180],["Fish65Briyani",200],["PaneerDumBriyani",120],
+                    ["MushroomDumBriyani",120],["Kuboos",10],["Naan",30],["ButterNaan",35],["GarlicNaan",45],["CheeseNaan",45],["Roti",25],
+                    ["ButterRoti",30],["WheatParotta",30],["Chappathi",20],["ButterChappathi",25],["Parotta",20],["EggParotta",30],
+                    ["VegKothuParotta",80],["EggKothuParotta",90],["ChickenKothuParotta",110],["MuttonKothuParotta",140],["PrawnKothuParotta",130],["EggLappa",90],
+                    ["ChickenLappa",120],["KalDosai",30],["PlainDosai",50],["GheeDosai",60],["PodiDosai",60],["OnionDosai",70],
+                    ["EggDosai",70],["ChickenDosai",100],["MuttonDosai",120],["PrawnDosai",120],["DalFry",80],["VegMasala",100],
+                    ["VegButterMasala",120],["VegChettinad",120],["VegKadai",120],["MushroomMasala",120],["MushroomPepperMasala",120],["MushroomChettinad",140],
+                    ["MushroomKadaiMasala",140],["PaneerKadaiMasala",140],["PaneerButterMasala",140],["PaneerTikkaMasala",140],["PaneerDopizza",140],
+                    ["BoiledEgg",20],["HalfBoiledEgg",25],["Omlet",30],["EggBhurji",70],["CauliflowerEggBhurji",80],["EggMuttonBhurji",100],
+                    ["EggMasala",120],["EggButterMasala",130],["ChillyEgg",140],["ChillyEggManchurian",140],["ChickenMasala",140],
+                    ["PepperChickenMasala",150],["ChickenRoganjosh",160],["ChickenChettinad",160],["ChickenKadai",160],["ChickenHyderabadiGravy",160],
+                    ["ChickenTikkaMasala",160],["ButterChickenMasala",170],["ChickenChillyGravy",160],["ChickenChillyManchurianGravy",160],
+                    ["GingerChickenGravy",160],["GingerGarlicChickenGravy",160],["SchezwanChickenGravy",160],["ChickenDopizza",160],["MuttonMasala",180],
+                    ["MuttonPepperMasala",190],["MuttonKadai",190],["MuttonChettinad",190],["MuttonRoganjosh",190],["MuttonChilly",200],["MuttonManchurian",200],
+                    ["PrawnMasala",180],["PrawnPepperMasala",190],["PrawnKadai",190],["PrawnChettinad",190],["PrawnRoganjosh",190],["PrawnChilly",200],
+                    ["PrawnManchurian",200],["FishMasala",180],["FishPepperMasala",190],["FishKadai",190],["FishChettinad",190],["FishRoganjosh",190],
+                    ["FishTikkaMasala",190],["FishChilly",200],["FishManchurian",200],["VegClearSoup",70],["MushroomClearSoup",80],
+                    ["HotnSourVegSoup",80],["HotnSourMushroomSoup",90],["CreamofMushroomSoup",90],["SweetCornSoup",90],["ChickenClearSoup",80],
+                    ["MuttonClearSoup",90],["PrawnClearSoup",90],["HotnSourChickenSoup",90],["HotnSourMuttonSoup",100],["HotnSourPrawnSoup",100],
+                    ["CreamofChickenSoup",90],["CreamofMuttonSoup",100],["SweetCornChickenSoup",100],["SeaFoodSoup",120],["Gobi65",100],
+                    ["GobiChillyDry",120],["GobiManchurianDry",120],["Paneer65",120],["PaneerChillyDry",140],["PaneerManchurianDry",140],
+                    ["PaneerFinger",140],["CrispyPaneer",120],["Mushroom65",120],["MushroomPepperFry",120],["MushroomChillyDry",140],
+                    ["MushroomManchurianDry",140],["BabyCorn65",120],["BabyCornFry",120],["BabyCornChillyDry",140],["BabyCornManchurianDry",140],
+                    ["Chicken65Boneless",140],["ChickenLollipop",150],["ChickenDrumstick",160],["ChickenDrumstickofHeaven",170],
+                    ["DragonChicken",150],["ChickenPepperFry",150],["MuttonPepperFry",180],["Prawn65",180],["PrawnPepperFry",180],["Fish65",180],
+                    ["FishFinger",180],["FishPepperFry",180],["ChickenFinger",160],["MuttonChuka",190],["CrabLollipop",180],["ChickenShawarmaRoll",60],
+                    ["SpecialChickenShawarmaRoll",90],["PorathaShawarmaRoll",90],["JumboShawarmaRoll",90],["PorathaShawarmaPlate",120],
+                    ["ChickenShawarmaPlate",100],["SpecialChickenShawarmaPlate",120],["JumboChickenShawarmaPlate",120],["PepperBarbequeChickenFull",320],
+                    ["PepperBarbequeChickenHalf",180],["PepperBarbequeChickenQuarter",100],["AlFahmChickenFull",320],["AlFahmChickenHalf",180],
+                    ["AlFahmChickenQuarter",100],["PepperChickenFull",300],["PepperChickenHalf",160],["PepperChickenQuarter",90],
+                    ["FishBarbeque",320],["TandooriChickenFull",300],["TandooriChickenHalf",160],["TandooriChickenQuarter",90],["ChickenTikka",160],
+                    ["FishTikka",180],["PaneerTikka",140],["SteamRice",70],["GheeRice",90],["JeeraRice",90],["VegPulao",100],["VegFriedRice",100],
+                    ["VegFriedNoodles",100],["SchezwanVegFriedRice",120],["SchezwanVegFriedNoodles",120],["MushroomFriedRice",110],
+                    ["SchezwanMushroomFriedRice",130],["SchezwanMushroomFriedNoodles",130],["PaneerFriedRice",110],["PaneerFriedNoodles",110],
+                    ["SchezwanPaneerFriedRice",130],["SchezwanPaneerFriedNoodles",130],["EggFriedRice",110],["EggFriedNoodles",110],
+                    ["SchezwanEggFriedRice",130],["SchezwanEggFriedNoodles",130],["ChickenFriedRice",120],["ChickenFriedNoodles",120],
+                    ["SchezwanChickenFriedRice",140],["SchezwanChickenFriedNoodles",140],["Chicken65FriedRice",130],["Chicken65FriedNoodles",130],["SchezwanChicken65FriedRice",150],
+                    ["SchezwanChicken65FriedNoodles",150],["MuttonFriedRice",150],["MuttonFriedNoodles",150],["SchezwanMuttonFriedRice",170],
+                    ["SchezwanMuttonFriedNoodles",170],["FishFriedRice",150],["FishFriedNoodles",150],["SchezwanFishFriedRice",170],
+                    ["SchezwanFishFriedNoodles",170],["PrawnFriedRice",150],["PrawnFriedNoodles",150],["SchezwanPrawnFriedRice",170],["SchezwanPrawnFriedNoodles",170],
+                    ["MixedFriedRice",160],["MixedFriedNoodles",160],["SchezwanMixedFriedRice",180],["SchezwanMixedFriedNoodles",180],["BananaLeafSplFriedRice",180],
+                    ["BananaLeafSplFriedNoodles",180],
+                ]);
+        
+        let storeText = localStorage.getItem('test');
+        let items = JSON.parse(storeText);
+        let cartItems = document.getElementById("cartItems");
+        let cashContent = document.getElementById("cashContent");
+        let payBtn = document.getElementById("paymentBtn");
+
+
+        Object.keys(items).forEach(key => {
+            displayItemInCart(key, items[key]);
+            
+        });
+
+        let totalAsString = localStorage.getItem('netTotal');
+        let totalamount = JSON.parse(totalAsString);
+        
+        payBtn.onclick=()=>{
+            if(flag==0){
+                let totVal = Number(totalamount.amount)+Number(fee);
+                console.log(fee);
+                console.log(foodorder);
+                let billAmount  = {
+                    "bill":totVal,
+                    "dishesOrdered" : foodorder,
+                    "fee" : fee,
+                }
+                let billTotal = JSON.stringify(billAmount);
+                localStorage.setItem('billAmount',billTotal);
+
+            }
+            if(flag==1){
+                let totVal = Number(newTot)+Number(fee);
+                console.log(newTot+fee);
+                console.log(fee);
+                console.log(foodorder);
+                let billAmount  = {
+                    "bill":totVal,
+                    "dishesOrdered" : foodorder,
+                    "fee" : fee,
+                }
+                let billTotal = JSON.stringify(billAmount);
+                localStorage.setItem('billAmount',billTotal);
+            }
+        }
+
+        cashContent.innerHTML =  `&#x20B9; ${totalamount.amount+fee} (Inc Charges)`;
+
+        function displayItemInCart(dishname,quantity){
+            fee = fee + Number(quantity);
+            foodorder =  foodorder + dishname + "-"+quantity;
+            arr[i] = dishname;
+            i++;
+            let dishid = dishname+"list"//Id of li tag
+            let plusid = dishname+"listplusicon";
+            let minusid = dishname+"listminusicon";
+            let valueid = dishname+"listvalue";
+            let item1 = document.createElement('li');
+            item1.setAttribute("id",dishid);
+            item1.setAttribute('class','itemlist');
+
+            let item1content = document.createElement("p");
+            item1content.setAttribute("class","dishname")
+            item1content.innerText=dishname;
+
+            let item1btn = document.createElement("div");
+            item1btn.setAttribute("class","quantity");
+            //item1btn.innerText=quantity;
+
+            let item1btnminus = document.createElement('div');
+            item1btnminus.setAttribute("class","minusBtn");
+            item1btnminus.setAttribute("id",minusid);
+            item1btnminus.innerHTML=`<i  class="fa-solid fa-minus"></i>`;
+            item1btn.append(item1btnminus);
+
+
+            let item1btnvalue = document.createElement('div');
+            item1btnvalue.setAttribute("class","btnValue");
+            item1btnvalue.setAttribute("id",valueid);
+            item1btnvalue.innerText = quantity;
+            item1btn.append(item1btnvalue);
+
+
+            let item1btnplus = document.createElement("div");
+            item1btnplus.setAttribute("class","plusBtn");
+            item1btnplus.setAttribute("id",plusid);
+            item1btnplus.innerHTML = `<i class="fa-solid fa-plus"></i>`;
+            item1btn.append(item1btnplus);
+
+            let line = document.createElement('hr');
+            line.setAttribute('id',dishname+"listline");
+            line.setAttribute('class','line');
+
+
+
+            item1.append(item1content);
+            item1.append(item1btn);
+            cartItems.append(item1);
+            cartItems.append(line);
+        }
+        setInterval(()=>{
+            for(let j=0;j<arr.length;j++){
+                let plus = document.getElementById(arr[j]+"listplusicon");
+                let minus = document.getElementById(arr[j]+"listminusicon")
+                plus.onclick=()=>{
+                    foodorder = "";
+                    flag=1;
+                    newTot=0;
+                    fee=0;
+                    let num = Number(items[arr[j]]);
+                    let val = document.getElementById(arr[j]+"listvalue");
+                    val.innerText = num+1;
+                    items[arr[j]]=num+1;
+                    Object.keys(items).forEach(key => {
+                        let food = key;
+                        let foodquantity =  items[key];
+                        let foodPrice = Number(dishPrice.get(food))*Number(foodquantity);
+                        newTot = newTot + foodPrice;
+                        foodorder = foodorder + key + "-"+items[key];
+                        fee = fee + Number(foodquantity);
+                    });
+                    cashContent.innerHTML =  `&#x20B9; ${newTot+fee} (Inc Charges)`;
+                }
+                minus.onclick=()=>{
+                    fee=0;
+                    flag=1;
+                    newTot=0;
+                    let num = Number(items[arr[j]]);
+                    let val = document.getElementById(arr[j]+"listvalue");
+                    let minVal = num-1;
+                    val.innerText = minVal;
+                    items[arr[j]]=minVal;
+                    foodorder = "";
+                    if(minVal==0){
+                        let listrow = document.getElementById(arr[j]+"list");
+                        let listline = document.getElementById(arr[j]+"listline");
+                        listrow.style.display="none";
+                        listline.style.display="none";
+                    }
+                    Object.keys(items).forEach(key => {
+                        let food = key;
+                        let foodquantity =  items[key];
+                        let foodPrice = Number(dishPrice.get(food))*Number(foodquantity);
+                        newTot = newTot + foodPrice;
+                        foodorder = foodorder + key + "-"+items[key];
+                        fee = fee + Number(foodquantity);
+                    });
+                    cashContent.innerHTML =  `&#x20B9; ${newTot+fee} (Inc Charges)`;
+                    if(newTot==0){
+                        cashContent.innerHTML =  `&#x20B9; ${newTot}`;
+                        location.replace("scrollbug.html");
+                    }
+                }
+            }
+            
+        },1);
+        
+    </script>
+</body>
+</html>

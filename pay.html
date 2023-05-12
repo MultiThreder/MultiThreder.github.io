@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    
+
+
+<script type="module">
+
+        let j=0,fee_amount;
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import {getDatabase,set,get,update,remove,ref,child} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyC6SwM34BpbTFhlF4GgeRtKVQsW4DGQdLo",
+            authDomain: "bananaleaf-c4b47.firebaseapp.com",
+            projectId: "bananaleaf-c4b47",
+            storageBucket: "bananaleaf-c4b47.appspot.com",
+            messagingSenderId: "638343236798",
+            appId: "1:638343236798:web:0624349c7646a30b78e2ef",
+            measurementId: "G-PLDTX13TN4"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+        const dbref = ref(db);
+        get(child(dbref,'OrdersIndex/')).then((snapshot)=>{
+            if(snapshot.exists()){
+                j = snapshot.val().Value;
+                console.log(j);            
+            }else{
+                alert("Please contact the admin");
+            }
+        }).catch((error)=>{
+            alert("No Connection");
+        });
+
+        get(child(dbref,'Fees/')).then((snapshot)=>{
+            if(snapshot.exists()){
+                fee_amount = snapshot.val().Value;            
+            }else{
+                alert("Please contact the admin");
+            }
+        }).catch((error)=>{
+            alert("No Connection");
+        });
+
+
+
+        let orderedFoods = localStorage.getItem('billAmount');
+        let totalamount = JSON.parse(orderedFoods);
+        console.log(totalamount.dishesOrdered);
+
+        let totalAsString = localStorage.getItem('billDetails');
+        let userDetail = JSON.parse(totalAsString);
+        console.log(userDetail);
+
+
+        let orderDetail = localStorage.getItem('orderIdDetails');
+        let orderId = JSON.parse(orderDetail);
+        console.log(orderId.orderid);
+        console.log(userDetail.bill);
+        console.log(userDetail.number);
+        console.log(userDetail.name);
+        console.log(userDetail.table);
+
+        let UserOrder = `Table--${userDetail.table}--Name---${userDetail.name}---MobileNo--${userDetail.number}--Items--${totalamount.dishesOrdered}---Amount--${userDetail.bill}`
+        console.log(UserOrder)
+        function success(){
+            let newVal = Number(j)+1;
+            set(ref(db,"OrdersIndex/"),{
+                Value : newVal,
+            }).then(()=>{
+                            
+            }).catch((error)=>{
+                alert("Failed")
+            });
+
+            set(ref(db,"Orders/"+j),{
+                Value : UserOrder,
+                Status : "No",
+            }).then(()=>{
+                            
+            }).catch((error)=>{
+                alert("Failed")
+            });
+
+            let newFee = Number(totalamount.fee) + Number(fee_amount);
+            set(ref(db,"Fees/"),{
+                Value : newFee,
+            }).then(()=>{
+                            
+            }).catch((error)=>{
+                alert("Failed")
+            });
+
+            location.replace("scrollbug.html");
+        }
+
+    
+var options = {
+    "key": "rzp_test_fSlbXLUCG7F6Ng", // Enter the Key ID generated from the Dashboard
+    "amount": Number(userDetail.bill)*100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "Saiprasad", //your business name
+    "description": "Test Transaction",
+    "image": "https://example.com/your_logo",
+    "order_id": orderId.orderid,
+    "handler": function (response){
+        //alert(response.razorpay_payment_id);
+        //alert(response.razorpay_order_id);
+        //alert(response.razorpay_signature)
+        success();
+    },
+    "prefill": {
+        "name": "Saiprasad", //your customer's name
+        "email": "saiprasadjjj@gmail.com",
+        "contact": "7540028149"
+    },
+    "notes": {
+        "address": "Razorpay Corporate Office"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+
+
+var rzp1 = new Razorpay(options);
+rzp1.on('payment.failed', function (response){
+        alert(response.error.code);
+        alert(response.error.description);
+        alert(response.error.source);
+        alert(response.error.step);
+        alert(response.error.reason);
+        alert(response.error.metadata.order_id);
+        alert(response.error.metadata.payment_id);
+});
+
+rzp1.open();
+e.preventDefault();
+
+</script>
+</body>
+</html>

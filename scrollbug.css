@@ -1,0 +1,357 @@
+body::-webkit-scrollbar{
+    display: none;
+}
+.top{
+    width:100%;
+    height:10vh;
+    position: fixed;
+    top:0px;
+}
+.content{
+    width:100%;
+    height:81vh;
+    position:relative;
+    top:80px;
+    overflow-x:hidden;
+    overflow-y: scroll;
+}
+.content::-webkit-scrollbar{
+    width:8px;
+}
+.content::-webkit-scrollbar-thumb{
+    background-color: red;
+}
+
+.wrapper{
+    
+    border:1px solid white;
+    display:flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    position:relative;
+    bottom:8px;
+}
+.wrapper .item{
+    min-width:300px;
+    height: 360px;
+    text-align: center;
+    background-color:white;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+    margin-right: 15px;
+}
+.wrapper::-webkit-scrollbar{
+    width:0;
+}
+.imgFile{
+    width:300px;
+    height:150px;
+}
+.scroll-left{
+    position: relative;
+    top:180px;
+    z-index: 1;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    width:40px;
+    height:40px;
+    background-color: white;
+    text-align: center;
+    border-radius: 20px;
+}
+.fa-chevron-left{
+    position: relative;
+    top:12px;
+}
+.scroll-right{
+    float:right;
+    position: relative;
+    bottom:230px;
+    z-index: 1;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    width:40px;
+    height:40px;
+    background-color: white;
+    text-align: center;
+    border-radius: 20px;
+}
+.fa-chevron-right{
+    position: relative;
+    top:12px;
+}
+.addBtn{
+    width:298px;
+    height:50px;
+    background-color: white;
+    color:red;
+    text-align: center;
+    position: relative;
+    top:20px;
+    border-style:solid;
+    border-color: red;
+    border-width: 1px;
+}
+.dishName{
+    position: relative;
+    left:20px;
+    text-align: left;
+    font-size: 18px;
+    
+}
+.dishDescription{
+    position: relative;
+    left:20px;
+    line-height: 1.8;
+    text-align: left;
+    
+}
+.minusIcon{
+    width:70px;
+    height:50px;
+    position:relative;
+    left:30px;
+    
+}
+.dishQuantity{
+    position: relative;
+    bottom: 60px;
+    left:115px;
+    width:70px;
+    height:50px;
+    
+}
+.plusIcon{
+    position: relative;
+    bottom:140px;
+    left:200px;
+    width:70px;
+    height:50px;
+    
+}
+.fa-plus{
+    position: relative;
+    top:15px;
+    display:none;
+}
+.fa-minus{
+    position: relative;
+    top:15px;
+    display:none;
+}
+.title{
+    text-align: center;
+    font-size: 25px;
+}
+.subtitle{
+    text-align: center;
+    font-size: 23px;
+}
+.cart{
+    width:100%;
+    height:50px;
+    display: none;
+    background-color: red;
+    position: fixed;
+    bottom: 0px;
+    left:0px;
+    right:0px;
+}
+#cartBtn{
+    float:right;
+    padding:10px 15px;
+    background-color: white;
+    color:red;
+    border-style: none;
+    font-size:16px;
+    border-radius: 5px;
+    position: relative;
+    top:5px;
+    right:10px;
+}
+.cartDishQuantityBtn{
+    width:298px;
+    height:50px;
+    background-color: red;
+    color:white;
+    position: relative;
+    top:45px;
+    left:270px;
+    text-align: center;
+    font-size:19px;
+    margin:15px;
+}
+.topNav{
+    text-align: center;
+    background-color: white;
+    position: relative;
+    top: 60px;  
+}
+#titleLogo{
+    color:red;
+    font-size: 20px;
+    text-align: center;
+}
+#searchBar{
+    width:90vw;
+    height:25px;
+    padding:15px;
+    border-radius: 10px;
+    border-style:solid;
+    border-width:1px;
+    background-color: rgb(252, 252, 251);
+}
+@keyframes drag{
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+@media screen and (max-width:1100px){
+    .cartDishQuantityBtn{
+        width:140px;
+        position: relative;
+        left:175px;
+    }
+    .wrapper .item{
+        min-width:210px;
+        height: 243px;
+        text-align: center;
+        background-color:white;
+        box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+        margin-right: 15px;
+    }
+    .content::-webkit-scrollbar{
+        width:2px;
+    }
+    .imgFile{
+        width:210px;
+        height:100px;
+    }
+    .dishName{
+        font-size: 14px;
+        position: relative;
+        left:10px;
+        
+    }
+    .dishDescription{
+        font-size: 12px;
+        position: relative;
+        left:10px;
+        width:200px;
+        line-height: 1.6;
+        color:rgb(67, 66, 66)
+    }
+    .scroll-left{
+        position:relative;
+        top:140px;
+        display: none;
+    }
+    .scroll-right{
+        position:relative;
+        bottom:155px;
+        display: none;
+    }
+    .addBtn{
+        width:210px;
+        height:40px;
+        background-color: white;
+        color:red;
+        text-align: center;
+        position: relative;
+        top:0px;
+        border-style:solid;
+        border-color: red;
+        border-width: 1px;
+        font-size: 15px;
+    }
+    .dishQuantity{
+        position: relative;
+        bottom: 50px;
+        left:70px;
+        width:70px;
+        height:50px;
+        font-size: 15px;
+        
+    }.plusIcon{
+        position:relative;
+        left:130px;
+    }
+    .minusIcon{
+        position: relative;
+        left:10px;
+    }
+    .fa-plus{
+        position: relative;
+        top:29px;
+        display:none;
+        font-size: 13px;
+    }
+    .fa-minus{
+        position: relative;
+        top:15px;
+        display:none;
+        font-size: 13px;
+    }
+    .title{
+        text-align: center;
+        font-size: 16px;
+        position:relative;
+        bottom:5px;
+    }
+    .subtitle{
+        text-align: center;
+        font-size: 15px;
+        position: relative;
+        bottom:5px;
+    }
+    .topNav{
+        text-align: center;
+        background-color: white;
+    }
+    #searchBar{
+        width:80vw;
+        height:25px;
+        padding:15px;
+        border-radius: 10px;
+        border-style:solid;
+        border-width:1px;
+        background-color: rgb(252, 252, 251);
+    }
+    
+}
+
+/*
+.wrapper{
+    
+    border:1px solid #ddd;
+    display:flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+.wrapper .item{
+    min-width:300px;
+    height: 360px;
+    line-height: 110px;
+    text-align: center;
+    background-color: #ddd;
+    margin-right: 15px;
+}
+*/
+
+/*
+.wrapper{
+    
+    border:1px solid #ddd;
+    display:flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+.wrapper .item{
+    min-width:300px;
+    height: 360px;
+    line-height: 110px;
+    text-align: center;
+    background-color: #ddd;
+    margin-right: 15px;
+}
+*/

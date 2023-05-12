@@ -1,0 +1,84 @@
+html{
+    background-color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#userName{
+    padding:15px 35px;
+    margin-left:120px;
+    margin-right:120px;
+}
+#userTableNumber{
+    padding:15px 35px;
+    margin-left:120px;
+    margin-right:120px;
+}
+#userMobileNumber{
+    padding:15px 35px;
+    margin-left:120px;
+    margin-right:120px;
+}
+.detailForm{
+    border-radius: 5px;
+    border-style: none;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    line-height: 2.7;
+    width:fit-content;
+    margin-top:50px;
+}
+label{
+    margin-left:120px;
+    margin-right:120px;
+}
+.form{
+    position: relative;
+    bottom:17px;
+}
+.detailForm p{
+    text-align: center;
+    font-size: 25px;
+}
+#totalAmount{
+    background-color: red;
+    color:white;
+    padding:15px 93px;
+    border-style: none;
+    margin:30px;
+    margin-left: 120px;
+}
+@media screen and (max-width:800px){
+    .detailForm{
+        width:300px;
+        position: relative;
+        top:80px;
+    }
+    #userName{
+        padding:15px 34px;
+        margin-left:19px;
+        margin-right:0px;
+    }
+    #userMobileNumber{
+        padding:15px 34px;
+        margin-left:19px;
+        margin-right:0px;
+    }
+    #userTableNumber{
+        padding:15px 34px;
+        margin-left:19px;
+        margin-right:0px;
+    }
+    label{
+        margin-right: 0px;
+        margin-left: 19px;
+    }
+    #totalAmount{
+        background-color: red;
+        color:white;
+        padding:15px 93px;
+        border-style: none;
+        margin:30px;
+        margin-left: 19px;
+    }
+}

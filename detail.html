@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="detail.css">
+    <title>Details</title>
+</head>
+<body>
+    <div class="detailForm">
+        <p>Hotel</p>
+        <div class="form">
+            <label for="userTableNumber">Table No</label><br>
+            <input type="number" placeholder="Your Table Number" id="userTableNumber"><br>
+            <label for="userName">Your Name</label><br>
+            <input type="text" placeholder="Your Good Name" id="userName"><br>
+            <label for="userMobileNumber">Enter your Number</label><br>
+            <input type="tel" placeholder="+91-Phone Number" id="userMobileNumber"><br>
+            
+            <button type="button" id="totalAmount"></button>
+        </div>
+        <br>
+    </div>
+    <script type="module">
+        let unprocessedNo=0,processedNo=0,value=0;
+        let number,tableno;
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import {getDatabase,set,get,update,remove,ref,child} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyC6SwM34BpbTFhlF4GgeRtKVQsW4DGQdLo",
+            authDomain: "bananaleaf-c4b47.firebaseapp.com",
+            projectId: "bananaleaf-c4b47",
+            storageBucket: "bananaleaf-c4b47.appspot.com",
+            messagingSenderId: "638343236798",
+            appId: "1:638343236798:web:0624349c7646a30b78e2ef",
+            measurementId: "G-PLDTX13TN4"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+
+        let totalAsString = localStorage.getItem('billAmount');
+        let totalamount = JSON.parse(totalAsString);
+        console.log(totalamount.bill);
+        document.getElementById("totalAmount").innerText=`Pay-${totalamount.bill}`;
+
+        let nextBtn = document.getElementById("totalAmount");
+        let userNumber = document.getElementById("userMobileNumber");
+        let userName = document.getElementById("userName");
+        let userTableNumber = document.getElementById("userTableNumber");
+
+        nextBtn.onclick=()=>{
+            let name = userName.value;
+            number = userNumber.value;
+            tableno = userTableNumber.value;
+            if(((name!="")&&(name!=" "))&&((number!="")&&(number!=" "))&&((tableno!="")&&(tableno!=" "))){
+                let billDetails  = {
+                    "bill":totalamount.bill,
+                    "name":name,
+                    "number":number,
+                    "table":tableno,
+                }
+                let bill = JSON.stringify(billDetails);
+                localStorage.setItem('billDetails',bill);
+
+                
+                const dbref = ref(db);
+                
+                get(child(dbref,'IdIndexUnprocessed/')).then((snapshot)=>{
+                    if(snapshot.exists()){
+                        let db_value = snapshot.val().Value;
+                        
+                        set(ref(db,"IdIndexUnprocessed/"),{
+                            Value : db_value+1
+                        }).then(()=>{
+                            
+                        }).catch((error)=>{
+                            alert("Failed")
+                        });
+
+                        set(ref(db,"OrderIdDetails/"+db_value),{
+                            Value : number,
+                            Amount :totalamount.bill,
+                        }).then(()=>{
+                            
+                        }).catch((error)=>{
+                            alert("Failed")
+                        });
+
+                        set(ref(db,"OrderId/"+number),{
+                            Value : "ntg",
+                        }).then(()=>{
+                            
+                        }).catch((error)=>{
+                            alert("Failed")
+                        });
+
+                    }else{
+                        alert("Please Contact The Admin-1");
+                    }
+                }).catch((error)=>{
+                    alert("No Connection");
+                });
+                check();
+                function check(){
+                    get(child(dbref,'OrderId/'+number)).then((snapshot)=>{
+                        if(snapshot.exists()){
+                            let userOrderId = snapshot.val().Value;
+                            if(userOrderId!="ntg"){
+                                let orderIdDetails  = {
+                                    "orderid":userOrderId,
+                                }
+                                let ordId = JSON.stringify(orderIdDetails);
+                                localStorage.setItem('orderIdDetails',ordId);
+                                window.location.href="pay.html";
+                            }
+                        }else{
+                            check();
+                            alert("Your Order is Processed...Press the pay Button again to continue!");
+                        }
+                    }).catch((error)=>{
+                        alert("No Connection");
+                    });
+                }
+                
+                
+                
+            }else{
+                alert("Enter the fields!");
+            }
+        }
+    </script>
+</body>
+</html>
