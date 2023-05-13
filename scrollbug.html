@@ -9,6 +9,7 @@
     <title>Document</title>
 </head>
 <body>
+        <p id="titleLogo"><b>Banana Leaf</b></p>
     <div class="top">
         <div class="topNav">
             <input type="text" placeholder="Search a dish" id="searchBar">
@@ -3943,6 +3944,8 @@
         <a href="cart.html"><button type="button" id="cartBtn">View Cart</button></a>
     </div>
     
+    
+    
     <script type="module">
 
         let itemCard;
@@ -4411,14 +4414,6 @@
 
         insertElement();
         */
-	
-	    function loadImg(){
-            for(let i=0;i<dishes.length;i++){
-                console.log("Loading...")
-                document.getElementById(dishes[i]+"Img").src="https://firebasestorage.googleapis.com/v0/b/digitalsignature-af550.appspot.com/o/images%2Ftacos.jpg?alt=media&token=5e8b7305-88ba-4c30-90a5-845422a03cf7";
-            }
-        }
-        loadImg();
 
         setInterval(check,1000);
         setInterval(checkdishStatusAndPrice,1000);
