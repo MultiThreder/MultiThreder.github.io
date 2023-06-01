@@ -1,0 +1,9 @@
+html{
+    display:flex;
+    justify-content: center;
+    text-align: center;
+}
+#waiting{
+    text-align: center;
+    margin-top:100%;
+}
