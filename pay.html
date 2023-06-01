@@ -4,16 +4,20 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+   <link rel="stylesheet" type="text/css" href="pay.css">
     <title>Document</title>
 </head>
 <body>
     
+    <p id="waiting">Please Wait..</p>
 
 
 <script type="module">
 
-        let j=0,fee_amount;
+        let waitingStatus = document.getElementById("waiting");
+        let cgstVal,sgstVal,totalVal;
+
+        let j=0,fee_amount,count=0,count1=0;
 
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
         import {getDatabase,set,get,update,remove,ref,child} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
@@ -35,122 +39,155 @@
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getDatabase();
+
+
         const dbref = ref(db);
+
+        get(child(dbref,'Details/')).then((snapshot)=>{
+                if(snapshot.exists()){
+                    cgstVal=snapshot.val().CGST;
+                    sgstVal=snapshot.val().SGST;
+                    totalVal = snapshot.val().Total;
+                }else{
+                    alert("No data");
+                }
+            }).catch((error)=>{
+                alert("No Connection");
+            });
+
+        async function accountStatus(food,quantity){
+            let num=0;
+            const dbref = ref(db);
+            await get(child(dbref,'Accounts/'+food)).then((snapshot)=>{
+                if(snapshot.exists()){
+                    num = snapshot.val().Value;
+                    console.log(num+"Yeah")
+                    num = Number(num) + Number(quantity);
+                    console.log("accounts   "+num);
+                }else{
+                    alert("No data");
+                }
+            }).catch((error)=>{
+                alert("No Connection");
+            });
+            
+            set(ref(db,"Accounts/"+food),{
+                  Value : num,
+            }).then(()=>{
+                count1++;
+                if(count1==count){
+                    location.replace("scrollbug.html");  
+                }
+            }).catch((error)=>{
+                alert("Failed")
+            });
+            
+        }
+        
+        
+
         get(child(dbref,'OrdersIndex/')).then((snapshot)=>{
             if(snapshot.exists()){
                 j = snapshot.val().Value;
-                console.log(j);            
-            }else{
-                alert("Please contact the admin");
-            }
-        }).catch((error)=>{
-            alert("No Connection");
-        });
+                console.log(j);
+                get(child(dbref,'Fees/')).then((snapshot)=>{
+                    if(snapshot.exists()){
+                        fee_amount = snapshot.val().Value;
+                        let orderedFoods = localStorage.getItem('billAmount');
+                let totalamount = JSON.parse(orderedFoods);
+                console.log(totalamount.dishesOrdered);
 
-        get(child(dbref,'Fees/')).then((snapshot)=>{
-            if(snapshot.exists()){
-                fee_amount = snapshot.val().Value;            
-            }else{
-                alert("Please contact the admin");
-            }
-        }).catch((error)=>{
-            alert("No Connection");
-        });
+                let totalAsString = localStorage.getItem('billDetails');
+                let userDetail = JSON.parse(totalAsString);
+                console.log(userDetail);
 
+                let accountDetails = localStorage.getItem('accMap');
+                let accountItems = JSON.parse(accountDetails);
+                console.log(accountItems)
+                
 
+                Object.keys(accountItems).forEach(key => {
+                    console.log(key, accountItems[key]);
+                    count++;
+                });
 
-        let orderedFoods = localStorage.getItem('billAmount');
-        let totalamount = JSON.parse(orderedFoods);
-        console.log(totalamount.dishesOrdered);
+                
 
-        let totalAsString = localStorage.getItem('billDetails');
-        let userDetail = JSON.parse(totalAsString);
-        console.log(userDetail);
+                let orderDetail = localStorage.getItem('orderIdDetails');
+                let orderId = JSON.parse(orderDetail);
+                console.log(orderId.orderid);
+                console.log(userDetail.bill);
+                console.log(userDetail.number);
+                console.log(userDetail.name);
+                console.log(userDetail.table);
 
+                let UserOrder = `Table-${userDetail.table}-Name-${userDetail.name}-MobileNo-${userDetail.number}--Items---${totalamount.dishesOrdered}---Amt=${totalamount.total}---CGST=${totalamount.cgst}---SGST=${totalamount.sgst}---SC=${totalamount.fee}---Tot=${userDetail.bill}`
+                console.log(UserOrder)
+                
+                    let newVal = Number(j)+1;
+                    set(ref(db,"OrdersIndex/"),{
+                        Value : newVal,
+                    }).then(()=>{
+                                    
+                    }).catch((error)=>{
+                        alert("Failed")
+                    });
 
-        let orderDetail = localStorage.getItem('orderIdDetails');
-        let orderId = JSON.parse(orderDetail);
-        console.log(orderId.orderid);
-        console.log(userDetail.bill);
-        console.log(userDetail.number);
-        console.log(userDetail.name);
-        console.log(userDetail.table);
+                    set(ref(db,"Orders/"+j),{
+                        Value : UserOrder,
+                        Status : "No",
+                    }).then(()=>{
+                        Object.keys(accountItems).forEach(key => {
+                            console.log(key, accountItems[key]);
+                            let food = key;
+                            let quantity = accountItems[key];
+                            accountStatus(food,quantity);
+                        });
+                        set(ref(db,"Details/"),{
+                            CGST : cgstVal+totalamount.cgst,
+                            SGST:sgstVal+totalamount.sgst,
+                            Total:totalVal+totalamount.total,
+                        }).then(()=>{
+                            waitingStatus.innerHTML = `Your Order is Placed :)`
+                        }).catch((error)=>{
+                            alert("Contact Admin");
+                        });
+                        //waitingStatus.innerHTML = `Your Order is Placed :)`
+                        //location.replace("scrollbug.html");          
+                    }).catch((error)=>{
+                        alert("Failed")
+                    });
 
-        let UserOrder = `Table--${userDetail.table}--Name---${userDetail.name}---MobileNo--${userDetail.number}--Items--${totalamount.dishesOrdered}---Amount--${userDetail.bill}`
-        console.log(UserOrder)
-        function success(){
-            let newVal = Number(j)+1;
-            set(ref(db,"OrdersIndex/"),{
-                Value : newVal,
-            }).then(()=>{
-                            
-            }).catch((error)=>{
-                alert("Failed")
-            });
-
-            set(ref(db,"Orders/"+j),{
-                Value : UserOrder,
-                Status : "No",
-            }).then(()=>{
-                            
-            }).catch((error)=>{
-                alert("Failed")
-            });
-
-            let newFee = Number(totalamount.fee) + Number(fee_amount);
-            set(ref(db,"Fees/"),{
-                Value : newFee,
-            }).then(()=>{
-                            
-            }).catch((error)=>{
-                alert("Failed")
-            });
-
-            location.replace("scrollbug.html");
-        }
-
-    
-var options = {
-    "key": "rzp_test_fSlbXLUCG7F6Ng", // Enter the Key ID generated from the Dashboard
-    "amount": Number(userDetail.bill)*100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-    "currency": "INR",
-    "name": "Saiprasad", //your business name
-    "description": "Test Transaction",
-    "image": "https://example.com/your_logo",
-    "order_id": orderId.orderid,
-    "handler": function (response){
-        //alert(response.razorpay_payment_id);
-        //alert(response.razorpay_order_id);
-        //alert(response.razorpay_signature)
-        success();
-    },
-    "prefill": {
-        "name": "Saiprasad", //your customer's name
-        "email": "saiprasadjjj@gmail.com",
-        "contact": "7540028149"
-    },
-    "notes": {
-        "address": "Razorpay Corporate Office"
-    },
-    "theme": {
-        "color": "#3399cc"
-    }
-};
+                    let newFee = Number(totalamount.fee) + Number(fee_amount);
+                    set(ref(db,"Fees/"),{
+                        Value : newFee,
+                    }).then(()=>{
+                                    
+                    }).catch((error)=>{
+                        alert("Failed")
+                    });                      
+                    }else{
+                        alert("Please contact the admin");
+                    }
+                }).catch((error)=>{
+                    alert("No Connection yeah");
+                });
 
 
-var rzp1 = new Razorpay(options);
-rzp1.on('payment.failed', function (response){
-        alert(response.error.code);
-        alert(response.error.description);
-        alert(response.error.source);
-        alert(response.error.step);
-        alert(response.error.reason);
-        alert(response.error.metadata.order_id);
-        alert(response.error.metadata.payment_id);
-});
 
-rzp1.open();
-e.preventDefault();
+                  
+                    }else{
+                        alert("Please contact the admin");
+                    }
+                }).catch((error)=>{
+                    alert("No Connection 2");
+                });
+
+        
+
+            
+        
+
 
 </script>
 </body>
