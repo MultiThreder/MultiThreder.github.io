@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=-1.0">
     <script src="https://kit.fontawesome.com/eccb15858b.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="cart.css">
     <title>Cart</title>
@@ -12,7 +12,7 @@
 
     <div class="content">
         <ul id="cartItems">
-            <li>Street Foods<br><br></li>
+            <li>Hotel<br><br></li>
             <li>Cart<br><br></li>
         </ul>
     </div>
@@ -27,6 +27,72 @@
         let arr=[];
         let flag = 0;
         let newTot=0;
+        let cgstPercent = 5/100;
+        let sgstPercent = 3/100;
+        
+        
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import {getDatabase,set,get,update,remove,ref,child} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyC6SwM34BpbTFhlF4GgeRtKVQsW4DGQdLo",
+            authDomain: "bananaleaf-c4b47.firebaseapp.com",
+            projectId: "bananaleaf-c4b47",
+            storageBucket: "bananaleaf-c4b47.appspot.com",
+            messagingSenderId: "638343236798",
+            appId: "1:638343236798:web:0624349c7646a30b78e2ef",
+            measurementId: "G-PLDTX13TN4"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+        
+        let accounts = new Map();
+
+        let dishes = ["PlainBriyani","EggDumBriyani","ChickenDumBriyani","HyderabadiChickenDumBriyani","Chicken65Briyani",
+                "TandooriChickenBriyani","MuttonDumBriyani","HyderabadiMuttonBriyani","PrawnDumBriyani",
+                "Prawn65Briyani","FishDumBriyani","Fish65Briyani","PaneerDumBriyani","MushroomDumBriyani","Kuboos",
+                "Naan","ButterNaan","CheeseNaan","GarlicNaan","Roti","ButterRoti","WheatParotta","Chappathi",
+                "ButterChappathi","Parotta","EggParotta","VegKothuParotta","EggKothuParotta","ChickenKothuParotta",
+                "MuttonKothuParotta","PrawnKothuParotta","EggLappa","ChickenLappa","KalDosai","PlainDosai",
+                "GheeDosai","PodiDosai","OnionDosai","EggDosai","ChickenDosai","MuttonDosai","PrawnDosai",
+                "DalFry","VegMasala","VegButterMasala","VegChettinad","VegKadai","MushroomMasala","MushroomPepperMasala",
+                "MushroomChettinad","MushroomKadaiMasala","PaneerKadaiMasala","PaneerButterMasala","PaneerTikkaMasala","PaneerDopizza",
+                "BoiledEgg","HalfBoiledEgg","Omlet","EggBhurji","CauliflowerEggBhurji","EggMuttonBhurji","EggMasala",
+                "EggButterMasala","ChillyEgg","ChillyEggManchurian","ChickenMasala","PepperChickenMasala","ChickenRoganjosh",
+                "ChickenChettinad","ChickenKadai","ChickenHyderabadiGravy","ChickenTikkaMasala","ButterChickenMasala","ChickenChillyGravy",
+                "ChickenChillyManchurianGravy","GingerChickenGravy","GingerGarlicChickenGravy","SchezwanChickenGravy","ChickenDopizza","MuttonMasala",
+                "MuttonPepperMasala","MuttonKadai","MuttonChettinad","MuttonRoganjosh","MuttonChilly","MuttonManchurian","PrawnMasala",
+                "PrawnPepperMasala","PrawnKadai","PrawnChettinad","PrawnRoganjosh","PrawnChilly","PrawnManchurian","FishMasala",
+                "FishPepperMasala","FishKadai","FishChettinad","FishRoganjosh","FishTikkaMasala","FishChilly","FishManchurian",
+                "VegClearSoup","MushroomClearSoup","HotnSourVegSoup","HotnSourMushroomSoup","CreamofMushroomSoup","SweetCornSoup",
+                "ChickenClearSoup","MuttonClearSoup","PrawnClearSoup","HotnSourChickenSoup","HotnSourMuttonSoup","HotnSourPrawnSoup",
+                "CreamofChickenSoup","CreamofMuttonSoup","SweetCornChickenSoup","SeaFoodSoup","Gobi65","GobiChillyDry",
+                "GobiManchurianDry","Paneer65","PaneerChillyDry","PaneerManchurianDry","PaneerFinger","CrispyPaneer",
+                "Mushroom65","MushroomPepperFry","MushroomChillyDry","MushroomManchurianDry","BabyCorn65","BabyCornFry",
+                "BabyCornChillyDry","BabyCornManchurianDry","Chicken65Boneless","ChickenLollipop","ChickenDrumstick",
+                "ChickenDrumstickofHeaven","DragonChicken","ChickenPepperFry","MuttonPepperFry","Prawn65","PrawnPepperFry","Fish65",
+                "FishFinger","FishPepperFry","ChickenFinger","MuttonChuka","CrabLollipop","ChickenShawarmaRoll","SpecialChickenShawarmaRoll",
+                "PorathaShawarmaRoll","JumboShawarmaRoll","PorathaShawarmaPlate","ChickenShawarmaPlate","SpecialChickenShawarmaPlate",
+                "JumboChickenShawarmaPlate","PepperBarbequeChickenFull","PepperBarbequeChickenHalf","PepperBarbequeChickenQuarter",
+                "AlFahmChickenFull","AlFahmChickenHalf","AlFahmChickenQuarter","PepperChickenFull","PepperChickenHalf",
+                "PepperChickenQuarter","FishBarbeque","TandooriChickenFull","TandooriChickenHalf","TandooriChickenQuarter","ChickenTikka",
+                "FishTikka","PaneerTikka","SteamRice","GheeRice","JeeraRice","VegPulao","VegFriedRice","VegFriedNoodles",
+                "SchezwanVegFriedRice","SchezwanVegFriedNoodles","MushroomFriedRice","SchezwanMushroomFriedRice","SchezwanMushroomFriedNoodles",
+                "PaneerFriedRice","PaneerFriedNoodles","SchezwanPaneerFriedRice","SchezwanPaneerFriedNoodles","EggFriedRice",
+                "EggFriedNoodles","SchezwanEggFriedRice","SchezwanEggFriedNoodles","ChickenFriedRice","ChickenFriedNoodles",
+                "SchezwanChickenFriedRice","SchezwanChickenFriedNoodles","Chicken65FriedRice","Chicken65FriedNoodles","SchezwanChicken65FriedRice","SchezwanChicken65FriedNoodles",
+                "MuttonFriedRice","MuttonFriedNoodles","SchezwanMuttonFriedRice","SchezwanMuttonFriedNoodles","FishFriedRice","FishFriedNoodles",
+                "SchezwanFishFriedRice","SchezwanFishFriedNoodles","PrawnFriedRice","PrawnFriedNoodles","SchezwanPrawnFriedRice","SchezwanPrawnFriedNoodles",
+                "MixedFriedRice","MixedFriedNoodles","SchezwanMixedFriedRice","SchezwanMixedFriedNoodles","BananaLeafSplFriedRice",
+                "BananaLeafSplFriedNoodles"]; 
+
+
         let dishPrice = new Map([
                     ["ChickenDumBriyani",125],["PlainBriyani",100],["EggDumBriyani",120],["HyderabadiChickenDumBriyani",140],
                     ["Chicken65Briyani",150],["TandooriChickenBriyani",170],["MuttonDumBriyani",180],["HyderabadiMuttonBriyani",190],["PrawnDumBriyani",180],
@@ -83,7 +149,7 @@
 
         Object.keys(items).forEach(key => {
             displayItemInCart(key, items[key]);
-            
+            accounts.set(key,items[key]);
         });
 
         let totalAsString = localStorage.getItem('netTotal');
@@ -91,20 +157,34 @@
         
         payBtn.onclick=()=>{
             if(flag==0){
-                let totVal = Number(totalamount.amount)+Number(fee);
+                let totVal = Math.round(Number(totalamount.amount)+Number(fee)+Number(totalamount.amount*cgstPercent)+Number(totalamount.amount*sgstPercent));
+
                 console.log(fee);
                 console.log(foodorder);
+                console.log(accounts);
                 let billAmount  = {
                     "bill":totVal,
                     "dishesOrdered" : foodorder,
                     "fee" : fee,
+                    "cgst" : totalamount.amount*cgstPercent,
+                    "sgst":totalamount.amount*sgstPercent,
+                    "total":Number(totalamount.amount)+Number(fee),
+                    "fee":fee,
                 }
+                console.log(totalamount.amount*cgstPercent);
+                console.log(totalamount.amount*sgstPercent);
                 let billTotal = JSON.stringify(billAmount);
                 localStorage.setItem('billAmount',billTotal);
 
+                let account = Object.fromEntries(accounts);
+                let accountMap = JSON.stringify(account);
+                
+                localStorage.setItem('accMap',accountMap);
+
             }
             if(flag==1){
-                let totVal = Number(newTot)+Number(fee);
+                console.log(accounts);
+                let totVal = Math.round(Number(newTot)+Number(fee)+Number(newTot*cgstPercent)+Number(newTot*sgstPercent));
                 console.log(newTot+fee);
                 console.log(fee);
                 console.log(foodorder);
@@ -112,20 +192,33 @@
                     "bill":totVal,
                     "dishesOrdered" : foodorder,
                     "fee" : fee,
+                    "cgst" : newTot*cgstPercent,
+                    "sgst":newTot*sgstPercent,
+                    "total":Number(newTot)+Number(fee),
+                    "fee":fee,
                 }
+                console.log(newTot*cgstPercent);
+                console.log(newTot*sgstPercent);
                 let billTotal = JSON.stringify(billAmount);
                 localStorage.setItem('billAmount',billTotal);
+
+                let account = Object.fromEntries(accounts);
+                let accountMap = JSON.stringify(account);
+                
+                localStorage.setItem('accMap',accountMap);
             }
         }
 
-        cashContent.innerHTML =  `&#x20B9; ${totalamount.amount+fee} (Inc Charges)`;
+        cashContent.innerHTML =  `&#x20B9; ${Math.round(totalamount.amount+fee+(totalamount.amount*cgstPercent)+(totalamount.amount*sgstPercent))} (Inc GST)`;
 
         function displayItemInCart(dishname,quantity){
             fee = fee + Number(quantity);
-            foodorder =  foodorder + dishname + "-"+quantity;
+            foodorder =  foodorder + dishname + "-Qty-"+quantity+"-Rs."+Number(dishPrice.get(dishname))*Number(quantity)+"---";
+            
             arr[i] = dishname;
             i++;
             let dishid = dishname+"list"//Id of li tag
+            let dishdetails = dishname + "details";
             let plusid = dishname+"listplusicon";
             let minusid = dishname+"listminusicon";
             let valueid = dishname+"listvalue";
@@ -136,6 +229,11 @@
             let item1content = document.createElement("p");
             item1content.setAttribute("class","dishname")
             item1content.innerText=dishname;
+
+            let dish1detail = document.createElement("p");
+            dish1detail.setAttribute("class","dishdetail");
+            dish1detail.setAttribute("id",dishdetails);
+            dish1detail.innerText=`Qty-${quantity}-Rs-${Number(dishPrice.get(dishname))*Number(quantity)}`
 
             let item1btn = document.createElement("div");
             item1btn.setAttribute("class","quantity");
@@ -168,6 +266,7 @@
 
 
             item1.append(item1content);
+            item1.append(dish1detail);
             item1.append(item1btn);
             cartItems.append(item1);
             cartItems.append(line);
@@ -176,7 +275,9 @@
             for(let j=0;j<arr.length;j++){
                 let plus = document.getElementById(arr[j]+"listplusicon");
                 let minus = document.getElementById(arr[j]+"listminusicon")
+                let dishdet = document.getElementById(arr[j]+"details");
                 plus.onclick=()=>{
+                    accounts.clear();
                     foodorder = "";
                     flag=1;
                     newTot=0;
@@ -188,14 +289,17 @@
                     Object.keys(items).forEach(key => {
                         let food = key;
                         let foodquantity =  items[key];
+                        accounts.set(food,foodquantity);
                         let foodPrice = Number(dishPrice.get(food))*Number(foodquantity);
                         newTot = newTot + foodPrice;
-                        foodorder = foodorder + key + "-"+items[key];
+                        foodorder = foodorder + key + "-Qty-"+items[key]+"-Rs."+Number(dishPrice.get(key))*Number(items[key])+"---";
                         fee = fee + Number(foodquantity);
                     });
-                    cashContent.innerHTML =  `&#x20B9; ${newTot+fee} (Inc Charges)`;
+                    cashContent.innerHTML =  `&#x20B9; ${Math.round(newTot+fee+(newTot*cgstPercent)+(newTot*sgstPercent))} (Inc GST)`;
+                    dishdet.innerText = `Qty-${num+1}-Rs-${Number(dishPrice.get(arr[j]))*Number(num+1)}`
                 }
                 minus.onclick=()=>{
+                    accounts.clear();
                     fee=0;
                     flag=1;
                     newTot=0;
@@ -212,14 +316,23 @@
                         listline.style.display="none";
                     }
                     Object.keys(items).forEach(key => {
+                        
                         let food = key;
                         let foodquantity =  items[key];
+                        accounts.set(food,foodquantity);
                         let foodPrice = Number(dishPrice.get(food))*Number(foodquantity);
                         newTot = newTot + foodPrice;
-                        foodorder = foodorder + key + "-"+items[key];
+                        let checkVal = Number(items[key]);
+                        
+                        if(checkVal!=0){
+                            
+                            foodorder = foodorder + key + "-Qty-"+items[key]+"-Rs."+Number(dishPrice.get(key))*Number(items[key])+"---";
+                        }
                         fee = fee + Number(foodquantity);
                     });
-                    cashContent.innerHTML =  `&#x20B9; ${newTot+fee} (Inc Charges)`;
+                    cashContent.innerHTML =  `&#x20B9; ${Math.round(newTot+fee+(newTot*cgstPercent)+(newTot*sgstPercent))} (Inc GST)`;
+                    
+                    dishdet.innerText = `Qty-${num-1}-Rs-${Number(dishPrice.get(arr[j]))*Number(num-1)}`
                     if(newTot==0){
                         cashContent.innerHTML =  `&#x20B9; ${newTot}`;
                         location.replace("scrollbug.html");
@@ -228,7 +341,35 @@
             }
             
         },1);
+
+        function priceStatus(dN){
+            
+            
+            const dbref = ref(db);
+            get(child(dbref,'Price/'+dN)).then((snapshot)=>{
+                if(snapshot.exists()){
+                    let db_price = snapshot.val().Price;
+                    
+                    dishPrice.set(dN,db_price);
+                }else{
+                    alert("Contact Admin");
+                    
+                }
+            }).catch((error)=>{
+                alert("Check your Network Connection(PR)");
+                
+            });
+
+        }
+
+        function checkPriceStatus(){
+            for(let i=0;i<dishes.length;i++){
+                priceStatus(dishes[i]);
+            }
+            
+        }
         
+        checkPriceStatus()
     </script>
 </body>
 </html>
