@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/eccb15858b.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="scrollbug.css">
+    <link rel="stylesheet" type="text/css" href="newdesign.css">
     <title>Document</title>
 </head>
 <body>
@@ -3939,17 +3939,27 @@
             <br><br><br><br><br><br><br><br>
         </div>
     </div>
+    <div class=suggest id="recommend">
+        <i class="fa-solid fa-circle-xmark" id="close"></i>
+        <p id="suggestTitle">You might forget to pair these</p>
+        <p id="suggestSubtitle">Mostly people pair these items for a best meal</p>
+        <div class="suggestItems">
+            <div class="wrapper" id="sItems">
+                        
+            </div>
+        </div>
+    </div>
     <div class="cart">
-        <a href="cart.html"><button type="button" id="cartBtn">View Cart</button></a>
+        <button type="button" id="cartBtn">View Cart</button>
     </div>
     
-    
-    
     <script type="module">
-
+        let temp;
         let itemCard;
         let orderedlist,backBtn,cartDiv,btnDiv;
         let total=0;
+        let rItems;
+        let sItems
         let cart = new Map([
 
         ]);
@@ -4017,7 +4027,7 @@
             if(value.toLowerCase().includes("dosa")){
                 window.location.href="#dosaiSection";
             }
-            if(value.toLowerCase().includes("veg")){
+            if((value.toLowerCase().includes("veg"))&&((value.toLowerCase()=="veg"))){
                 window.location.href="#vegmaincourseSection";
             }
             if(value.toLowerCase().includes("egg")){
@@ -4041,7 +4051,7 @@
             if(value.toLowerCase().includes("nonvegsoup")){
                 window.location.href="#nonvegsoupSection";
             }
-            if(value.toLowerCase().includes("nonveg")){
+            if((value.toLowerCase().includes("nonveg"))&&((value.toLowerCase()=="nonveg"))){
                 window.location.href="#nonvegmaincourseSection";
             }
             if(value.toLowerCase().includes("soup")){
@@ -4076,10 +4086,55 @@
         
 
        
-                
+        let top=document.querySelector(".top");
+        let content = document.querySelector(".content");     
         let cartBtn = document.getElementById("cartBtn");
+        let recommend = document.getElementById("recommend");
+        let close = document.getElementById("close");
+        let cartFlag=0;
+        let suggestArr = ["Chicken65Boneless","ChickenLollipop","ChickenDrumstick",
+                "ChickenDrumstickofHeaven","DragonChicken","ChickenPepperFry","MuttonPepperFry","Prawn65","PrawnPepperFry","Fish65",
+                "FishFinger","FishPepperFry","ChickenFinger","MuttonChuka","CrabLollipop"];
+        
         cartBtn.onclick=()=>{
-            displayCart();
+            let cartFlag2=0;
+            for(let k=0;k<suggestArr.length;k++){
+                if(cart.has(suggestArr[k])){
+                    cartFlag2++;
+                }
+            }
+            if(cartFlag2==0){
+                if(cartFlag==1){
+                    location.assign("cart.html");
+                    cartFlag=0;
+                }
+                top.style.opacity="0.3";
+                content.style.opacity="0.3";
+                recommend.style.display="block"
+                sItems = document.getElementById("sItems");
+                rItems = document.getElementById("scroll14");
+                temp = rItems.innerHTML;
+                rItems.innerHTML=``;
+                sItems.innerHTML = temp;
+                displayCart();
+                cartFlag++;
+            }else{
+                top.style.opacity="1";
+                content.style.opacity="1";
+                displayCart();
+                location.assign("cart.html");
+            }
+            
+            
+        }
+
+        close.onclick=()=>{
+            recommend.style.display="none";
+            top.style.opacity="1";
+            content.style.opacity="1";
+            sItems.innerHTML = ``;
+            rItems.innerHTML = temp;
+            location.assign("cart.html");
         }
 
         function displayCart(){
@@ -4358,7 +4413,7 @@
                 if(dishS.get(a)!=1){
                     if(dishS.get(a)=="Yes"){
                         document.getElementById(a+"Item").style.display="inline";
-                        document.getElementById(a+"Title").innerHTML = a+"-"+dishPrice.get(a);
+                        document.getElementById(a+"Title").innerHTML = a+"-&#x20B9;"+dishPrice.get(a);
                     }else{
                         document.getElementById(a+"Item").style.display="none";
                     }
@@ -4402,8 +4457,8 @@
         }
 
         function insert(dN){
-          set(ref(db,"Price/"+dN),{
-            Price : dishPrice.get(dN)
+          set(ref(db,"Accounts/"+dN),{
+            Value : 0,
           }).then(()=>{
             console.log("Sucess");
           }).catch((error)=>{
@@ -4413,6 +4468,9 @@
 
         insertElement();
         */
+        
+        
+
         function loadImg(){
             for(let i=0;i<dishes.length;i++){
                 console.log("Loading...")
