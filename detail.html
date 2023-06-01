@@ -13,9 +13,11 @@
         <div class="form">
             <label for="userTableNumber">Table No</label><br>
             <input type="number" placeholder="Your Table Number" id="userTableNumber"><br>
+            <label for="userTableCode">Table Code</label><br>
+            <input type="text" placeholder="Table Code" id="userTableCode"><br>
             <label for="userName">Your Name</label><br>
             <input type="text" placeholder="Your Good Name" id="userName"><br>
-            <label for="userMobileNumber">Enter your Number</label><br>
+            <label for="userMobileNumber">Your Mobile Number</label><br>
             <input type="tel" placeholder="+91-Phone Number" id="userMobileNumber"><br>
             
             <button type="button" id="totalAmount"></button>
@@ -24,7 +26,7 @@
     </div>
     <script type="module">
         let unprocessedNo=0,processedNo=0,value=0;
-        let number,tableno;
+        let number,tableno,db_code,tableCode;
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
         import {getDatabase,set,get,update,remove,ref,child} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
@@ -50,18 +52,20 @@
         let totalAsString = localStorage.getItem('billAmount');
         let totalamount = JSON.parse(totalAsString);
         console.log(totalamount.bill);
-        document.getElementById("totalAmount").innerText=`Pay-${totalamount.bill}`;
+        document.getElementById("totalAmount").innerHTML=`Order`;
 
         let nextBtn = document.getElementById("totalAmount");
         let userNumber = document.getElementById("userMobileNumber");
         let userName = document.getElementById("userName");
         let userTableNumber = document.getElementById("userTableNumber");
+        let userTableCode = document.getElementById("userTableCode");
 
         nextBtn.onclick=()=>{
             let name = userName.value;
             number = userNumber.value;
             tableno = userTableNumber.value;
-            if(((name!="")&&(name!=" "))&&((number!="")&&(number!=" "))&&((tableno!="")&&(tableno!=" "))){
+            tableCode = userTableCode.value;
+            if(((name!="")&&(name!=" "))&&((number!="")&&(number!=" "))&&((tableno!="")&&(tableno!=" "))&&((tableCode!="")&&(tableCode!=" "))){
                 let billDetails  = {
                     "bill":totalamount.bill,
                     "name":name,
@@ -71,70 +75,24 @@
                 let bill = JSON.stringify(billDetails);
                 localStorage.setItem('billDetails',bill);
 
-                
                 const dbref = ref(db);
-                
-                get(child(dbref,'IdIndexUnprocessed/')).then((snapshot)=>{
+                get(child(dbref,'TableCode/'+tableno)).then((snapshot)=>{
                     if(snapshot.exists()){
-                        let db_value = snapshot.val().Value;
-                        
-                        set(ref(db,"IdIndexUnprocessed/"),{
-                            Value : db_value+1
-                        }).then(()=>{
-                            
-                        }).catch((error)=>{
-                            alert("Failed")
-                        });
-
-                        set(ref(db,"OrderIdDetails/"+db_value),{
-                            Value : number,
-                            Amount :totalamount.bill,
-                        }).then(()=>{
-                            
-                        }).catch((error)=>{
-                            alert("Failed")
-                        });
-
-                        set(ref(db,"OrderId/"+number),{
-                            Value : "ntg",
-                        }).then(()=>{
-                            
-                        }).catch((error)=>{
-                            alert("Failed")
-                        });
-
+                        db_code = snapshot.val().Value;
+                        if(tableCode==db_code){
+                            window.location.href="pay.html";
+                        }else{
+                            alert("Check your Table Code");
+                        }
                     }else{
-                        alert("Please Contact The Admin-1");
+                        alert("Check your Table Number");
                     }
                 }).catch((error)=>{
                     alert("No Connection");
                 });
-                check();
-                function check(){
-                    get(child(dbref,'OrderId/'+number)).then((snapshot)=>{
-                        if(snapshot.exists()){
-                            let userOrderId = snapshot.val().Value;
-                            if(userOrderId!="ntg"){
-                                let orderIdDetails  = {
-                                    "orderid":userOrderId,
-                                }
-                                let ordId = JSON.stringify(orderIdDetails);
-                                localStorage.setItem('orderIdDetails',ordId);
-                                window.location.href="pay.html";
-                            }
-                        }else{
-                            check();
-                            alert("Your Order is Processed...Press the pay Button again to continue!");
-                        }
-                    }).catch((error)=>{
-                        alert("No Connection");
-                    });
-                }
-                
-                
-                
-            }else{
-                alert("Enter the fields!");
+            }
+            else{
+                alert("Enter all the fields!")
             }
         }
     </script>
