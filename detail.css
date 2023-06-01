@@ -14,6 +14,11 @@ html{
     margin-left:120px;
     margin-right:120px;
 }
+#userTableCode{
+    padding:15px 35px;
+    margin-left:120px;
+    margin-right:120px;
+}
 #userMobileNumber{
     padding:15px 35px;
     margin-left:120px;
@@ -43,7 +48,7 @@ label{
 #totalAmount{
     background-color: red;
     color:white;
-    padding:15px 93px;
+    padding:15px 105px;
     border-style: none;
     margin:30px;
     margin-left: 120px;
@@ -52,7 +57,7 @@ label{
     .detailForm{
         width:300px;
         position: relative;
-        top:80px;
+        top:25px;
     }
     #userName{
         padding:15px 34px;
@@ -69,6 +74,11 @@ label{
         margin-left:19px;
         margin-right:0px;
     }
+    #userTableCode{
+        padding:15px 34px;
+        margin-left:19px;
+        margin-right:0px;
+    }
     label{
         margin-right: 0px;
         margin-left: 19px;
@@ -76,7 +86,7 @@ label{
     #totalAmount{
         background-color: red;
         color:white;
-        padding:15px 93px;
+        padding:15px 105px;
         border-style: none;
         margin:30px;
         margin-left: 19px;
