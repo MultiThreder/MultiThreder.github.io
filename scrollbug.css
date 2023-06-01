@@ -15,6 +15,34 @@ body::-webkit-scrollbar{
     overflow-x:hidden;
     overflow-y: scroll;
 }
+#close{
+    font-size:28px;
+    color:red;
+    background-color: white;
+    margin-bottom:40px;
+}
+.suggest{
+    background-color: rgb(250, 251, 251);
+    position: fixed;
+    bottom:30px;
+    display: none;
+    left:0px;
+    width:100%;
+    height:500px;
+    border-top-left-radius: 55px;
+    border-top-right-radius: 55px;
+    text-align: center;
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+}
+#suggestTitle{
+    font-size: 22px;
+}
+#suggestSubtitle{
+    font-size: 16px;
+}
+.suggestItems .wrapper{
+    margin-top:50px;
+}
 .content::-webkit-scrollbar{
     width:8px;
 }
