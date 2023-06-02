@@ -14,24 +14,88 @@
 
 <script type="module">
 
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import {getDatabase,set,get,update,remove,ref,child} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyC6SwM34BpbTFhlF4GgeRtKVQsW4DGQdLo",
+            authDomain: "bananaleaf-c4b47.firebaseapp.com",
+            projectId: "bananaleaf-c4b47",
+            storageBucket: "bananaleaf-c4b47.appspot.com",
+            messagingSenderId: "638343236798",
+            appId: "1:638343236798:web:0624349c7646a30b78e2ef",
+            measurementId: "G-PLDTX13TN4"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
        
-                let orderedFoods = localStorage.getItem('billAmount');
-                let totalamount = JSON.parse(orderedFoods);
+        let orderedFoods = localStorage.getItem('billAmount');
+        let totalamount = JSON.parse(orderedFoods);
                 
 
-                let totalAsString = localStorage.getItem('billDetails');
-                let userDetail = JSON.parse(totalAsString);
+        let totalAsString = localStorage.getItem('billDetails');
+        let userDetail = JSON.parse(totalAsString);
                 
 
-                let accountDetails = localStorage.getItem('accMap');
-                let accountItems = JSON.parse(accountDetails);
-                console.log(accountItems);
+        let accountDetails = localStorage.getItem('accMap');
+        let accountItems = JSON.parse(accountDetails);
+        console.log(accountItems);
 
                
                
 
-                let UserOrder = `Table-${userDetail.table}-Name-${userDetail.name}-MobileNo-${userDetail.number}--Items---${totalamount.dishesOrdered}---Amt=${totalamount.total}---CGST=${totalamount.cgst}---SGST=${totalamount.sgst}---SC=${totalamount.fee}---Tot=${userDetail.bill}`
-                alert(UserOrder)
+        let UserOrder = `Table-${userDetail.table}-Name-${userDetail.name}-MobileNo-${userDetail.number}--Items---${totalamount.dishesOrdered}---Amt=${totalamount.total}---CGST=${totalamount.cgst}---SGST=${totalamount.sgst}---SC=${totalamount.fee}---Tot=${userDetail.bill}`
+        console.log(UserOrder);
+
+        let dbOrderIndexValue=0;
+
+        const dbref = ref(db);
+
+        async function orderIndexGetVal(){
+            await get(child(dbref,'OrdersIndex/')).then((snapshot)=>{
+                if(snapshot.exists()){
+                    dbOrderIndexValue = snapshot.val().Value;
+                    set(ref(db,"Orders/"+dbOrderIndexValue),{
+                        Value : UserOrder,
+                        Status : "No",
+                    }).then(()=>{
+                        
+                    }).catch((error)=>{
+                        alert("Failed")
+                    });
+
+                    set(ref(db,"OrdersIndex/"),{
+                        Value : Number(dbOrderIndexValue)+1,
+                    }).then(()=>{
+                        
+                    }).catch((error)=>{
+                        alert("Failed")
+                    });
+
+                }else{
+                    alert("Contact Admin-1");
+                }
+            }).catch((error)=>{
+            alert("No Connection-1");
+            });
+        }
+
+        
+
+        async function updateIndexVal(){
+
+        }
+
+        await orderIndexGetVal();
+
+        
+
 </script>
 </body>
 </html>
