@@ -54,6 +54,7 @@
         console.log(UserOrder);
 
         let dbOrderIndexValue=0,dbFeeValue=0,dbCgstValue,dbSgstValue,dbTotalValue;
+        
 
         const dbref = ref(db);
 
@@ -112,7 +113,7 @@
                                 SGST :Number(dbSgstValue)+Number(totalamount.sgst),
                                 Total :Number(dbTotalValue) + Number(totalamount.total),
                             }).then(()=>{
-                                location.replace("scrollbug.html");
+                                updateAccounts();
                             }).catch((error)=>{
                                 alert("Failed")
                             });
@@ -133,6 +134,66 @@
             });
         }
         
+        let foodArr=[];
+        let quantityArr=[];
+        let count=0;
+
+        function updateAccounts(){
+            Object.keys(accountItems).forEach(key => {
+                console.log(key, accountItems[key]);
+                let food = key;
+                let quantity = Number(accountItems[key]);
+                foodArr[count] = food;
+                quantityArr[count] = quantity;
+                count++;
+            });
+            console.log(foodArr);
+            console.log(quantityArr);
+            updateIndividualAccount();
+        }
+
+        let countFlag=0;
+        let countFlag2=0;
+
+        function updateIndividualAccount(){
+            
+            if(countFlag<Number(foodArr.length)){
+                console.log(foodArr[countFlag]);
+                console.log(quantityArr[countFlag]);
+                let f = foodArr[countFlag];
+                let q = quantityArr[countFlag];
+                get(child(dbref,'Accounts/'+f)).then((snapshot)=>{
+                    if(snapshot.exists()){
+                        let dbFoodQuantity = snapshot.val().Value;
+                        console.log(f+dbFoodQuantity);
+                        set(ref(db,"Accounts/"+f),{
+                            Value : Number(dbFoodQuantity) + q,
+                        }).then(()=>{
+                            countFlag2++;
+                            if(countFlag2==Number(foodArr.length)){
+                                let waiting = document.getElementById("waiting");
+                                waiting.innerHTML=`Your Order is Placed`;
+                                location.replace("scrollbug.html");
+                            }
+                        }).catch((error)=>{
+                            alert("Failed")
+                        });
+                    }else{
+                        alert("No data");
+                    }
+                }).catch((error)=>{
+                    alert("No Connection ss");
+                });
+                countFlag++;
+                
+                updateIndividualAccount();  
+            }
+            
+        }
+
+        
+            
+       
 
         orderIndexGetVal();
 
