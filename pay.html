@@ -73,7 +73,7 @@
                     set(ref(db,"OrdersIndex/"),{
                         Value : Number(dbOrderIndexValue)+1,
                     }).then(()=>{
-                        
+                        alert("Order Placed");
                     }).catch((error)=>{
                         alert("Failed")
                     });
@@ -88,9 +88,7 @@
 
         
 
-        async function updateIndexVal(){
-
-        }
+        
 
         await orderIndexGetVal();
 
