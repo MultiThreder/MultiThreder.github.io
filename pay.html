@@ -53,7 +53,7 @@
         let UserOrder = `Table-${userDetail.table}-Name-${userDetail.name}-MobileNo-${userDetail.number}--Items---${totalamount.dishesOrdered}---Amt=${totalamount.total}---CGST=${totalamount.cgst}---SGST=${totalamount.sgst}---SC=${totalamount.fee}---Tot=${userDetail.bill}`
         console.log(UserOrder);
 
-        let dbOrderIndexValue=0;
+        let dbOrderIndexValue=0,dbFeeValue=0,dbCgstValue,dbSgstValue,dbTotalValue;
 
         const dbref = ref(db);
 
@@ -73,7 +73,7 @@
                     set(ref(db,"OrdersIndex/"),{
                         Value : Number(dbOrderIndexValue)+1,
                     }).then(()=>{
-                        alert("Order Placed");
+                        accounts();
                     }).catch((error)=>{
                         alert("Failed")
                     });
@@ -87,7 +87,51 @@
         }
 
         
+        function accounts(){
+            
+            get(child(dbref,'Fees/')).then((snapshot)=>{
+                if(snapshot.exists()){
+                    dbFeeValue = snapshot.val().Value;
 
+                    get(child(dbref,'Details/')).then((snapshot)=>{
+                        if(snapshot.exists()){
+                            dbCgstValue = snapshot.val().CGST;
+                            dbSgstValue = snapshot.val().SGST;
+                            dbTotalValue = snapshot.val().Total;
+
+                            set(ref(db,"Fees/"),{
+                                Value : Number(dbFeeValue) + Number(totalamount.fee),
+                            }).then(()=>{
+                                
+                            }).catch((error)=>{
+                                alert("Failed")
+                            });
+
+                            set(ref(db,"Details/"),{
+                                CGST : Number(dbCgstValue) + Number(totalamount.cgst),
+                                SGST :Number(dbSgstValue)+Number(totalamount.sgst),
+                                Total :Number(dbTotalValue) + Number(totalamount.total),
+                            }).then(()=>{
+                                location.replace("scrollbug.html");
+                            }).catch((error)=>{
+                                alert("Failed")
+                            });
+
+
+                        }else{
+                            alert("No data");
+                        }
+                    }).catch((error)=>{
+                        alert("No Connection");
+                    });
+
+                }else{
+                    alert("No data");
+                }
+            }).catch((error)=>{
+                alert("No Connection");
+            });
+        }
         
 
         orderIndexGetVal();
