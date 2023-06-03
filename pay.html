@@ -8,12 +8,11 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <img src="https://firebasestorage.googleapis.com/v0/b/digitalsignature-af550.appspot.com/o/Food%2FloadingAnimation.gif?alt=media&token=39a9cfd2-7fd6-4364-bf3c-50172886dfd7" id="animationImg">
     <p id="waiting">Please Wait..</p>
 
-
 <script type="module">
-
+        
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
         import {getDatabase,set,get,update,remove,ref,child} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
         // TODO: Add SDKs for Firebase products that you want to use
@@ -172,7 +171,9 @@
                             countFlag2++;
                             if(countFlag2==Number(foodArr.length)){
                                 let waiting = document.getElementById("waiting");
+                                let animationImg = document.getElementById("animationImg");
                                 waiting.innerHTML=`Your Order is Placed`;
+                                animationImg.src="https://firebasestorage.googleapis.com/v0/b/digitalsignature-af550.appspot.com/o/Food%2FsuccessAnimation.gif?alt=media&token=ef8d0688-d93c-4038-964a-ab85b5e66fc3";
                                 location.replace("scrollbug.html");
                             }
                         }).catch((error)=>{
@@ -197,7 +198,6 @@
 
         orderIndexGetVal();
 
-        
 
 </script>
 </body>
