@@ -142,6 +142,11 @@
         
         let storeText = localStorage.getItem('test');
         let items = JSON.parse(storeText);
+
+        let itemPrice = localStorage.getItem('prices');
+        let iPrice = JSON.parse(itemPrice);
+        
+
         let cartItems = document.getElementById("cartItems");
         let cashContent = document.getElementById("cashContent");
         let payBtn = document.getElementById("paymentBtn");
@@ -233,7 +238,8 @@
             let dish1detail = document.createElement("p");
             dish1detail.setAttribute("class","dishdetail");
             dish1detail.setAttribute("id",dishdetails);
-            dish1detail.innerText=`Qty-${quantity}-Rs-${Number(dishPrice.get(dishname))*Number(quantity)}`
+            
+            dish1detail.innerText=`Qty-${quantity}-Rs-${Number(iPrice[dishname])*Number(quantity)}`
 
             let item1btn = document.createElement("div");
             item1btn.setAttribute("class","quantity");
