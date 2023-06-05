@@ -1,57 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Geolocation Example</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
 </head>
 <body>
-  <h1>Geolocation Example</h1>
-
-  <p>Latitude: <span id="latitude"></span></p>
-  <p>Longitude: <span id="longitude"></span></p>
-
   <script>
-    function getLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition, showError);
-      } else {
-        console.error("Geolocation is not supported by this browser.");
-      }
-    }
+    // Function to get the IP address
+function getIPAddress() {
+  return new Promise((resolve, reject) => {
+    // Make a request to an IP lookup service
+    fetch('https://api.ipify.org?format=json')
+      .then(response => response.json())
+      .then(data => resolve(data.ip))
+      .catch(error => reject(error));
+  });
+}
 
-    function showPosition(position) {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
+// Usage
+getIPAddress()
+  .then(ipAddress => {
+    console.log(`IP Address: ${ipAddress}`);
+    const ipaddress = ipAddress; // Replace with the IP address you want to geolocate
 
-      document.getElementById("latitude").textContent = latitude;
-      document.getElementById("longitude").textContent = longitude;
+    fetch(`http://ip-api.com/json/${ipaddress}`)
+      .then(response => response.json())
+      .then(data => {
+        const latitude = data.lat;
+        const longitude = data.lon;
+        alert(`Latitude: ${latitude}, Longitude: ${longitude}`);
+      })
+      .catch(error => console.error(error));
+      })
+  .catch(error => {
+    console.error(error);
+  });
 
-      // Call any additional functions or APIs with the coordinates
-      // ...
-    }
-
-    function showError(error) {
-      let errorMessage;
-
-      switch (error.code) {
-        case error.PERMISSION_DENIED:
-          errorMessage = "User denied the request for Geolocation.";
-          break;
-        case error.POSITION_UNAVAILABLE:
-          errorMessage = "Location information is unavailable.";
-          break;
-        case error.TIMEOUT:
-          errorMessage = "The request to get user location timed out.";
-          break;
-        case error.UNKNOWN_ERROR:
-          errorMessage = "An unknown error occurred.";
-          break;
-      }
-
-      console.error("Error:", errorMessage);
-    }
-
-    // Call the getLocation() function to initiate the geolocation request
-    getLocation();
   </script>
 </body>
 </html>
