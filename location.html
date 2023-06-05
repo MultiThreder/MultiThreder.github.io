@@ -22,7 +22,7 @@ function getIPAddress() {
 // Usage
 getIPAddress()
   .then(ipAddress => {
-    console.log(`IP Address: ${ipAddress}`);
+    alert(`IP Address: ${ipAddress}`);
     const ipaddress = ipAddress; // Replace with the IP address you want to geolocate
 
     fetch(`http://ip-api.com/json/${ipaddress}`)
