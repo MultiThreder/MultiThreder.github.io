@@ -75,6 +75,12 @@
                 let bill = JSON.stringify(billDetails);
                 localStorage.setItem('billDetails',bill);
 
+                let detailFlag = {
+                    "detailFlag":1,
+                }
+                let dFlag = JSON.stringify(detailFlag);
+                localStorage.setItem('dflag',dFlag);
+
                 const dbref = ref(db);
                 get(child(dbref,'TableCode/'+tableno)).then((snapshot)=>{
                     if(snapshot.exists()){
