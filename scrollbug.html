@@ -4150,7 +4150,12 @@
             }
             let totalAsString = JSON.stringify(netTotal);
             localStorage.setItem('netTotal',totalAsString);
-            
+
+            let menuFlag = {
+                "menuFlag":1,
+            }
+            let mFlag = JSON.stringify(menuFlag);
+            localStorage.setItem('mflag',mFlag);
             
             total = 0;
         }
