@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <link rel="stylesheet" type="text/css" href="pay.css">
-    <title>Document</title>
+    <title>Pay</title>
 </head>
 <body>
     <img src="https://firebasestorage.googleapis.com/v0/b/digitalsignature-af550.appspot.com/o/Food%2FloadingAnimation.gif?alt=media&token=39a9cfd2-7fd6-4364-bf3c-50172886dfd7" id="animationImg">
@@ -33,6 +33,20 @@
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getDatabase();
+
+        let mFlag = localStorage.getItem('mflag');
+        let menuFlag = JSON.parse(mFlag);
+
+        let dFlag = localStorage.getItem('dflag');
+        let detailFlag = JSON.parse(dFlag);
+
+        let cFlag = localStorage.getItem('cflag');
+        let cartFlag = JSON.parse(cFlag);
+
+        let flagOne = menuFlag.menuFlag;
+        let flagTwo = detailFlag.detailFlag;
+        let flagThree = cartFlag.cartFlag;
+
        
         let orderedFoods = localStorage.getItem('billAmount');
         let totalamount = JSON.parse(orderedFoods);
@@ -172,9 +186,32 @@
                             if(countFlag2==Number(foodArr.length)){
                                 let waiting = document.getElementById("waiting");
                                 let animationImg = document.getElementById("animationImg");
+
+                                let menuFlag = {
+                                    "menuFlag":0,
+                                }
+                                let mFlag = JSON.stringify(menuFlag);
+                                localStorage.setItem('mflag',mFlag);
+
+                                let cartFlag = {
+                                    "cartFlag":0,
+                                }
+                                let cFlag = JSON.stringify(cartFlag);
+                                localStorage.setItem('cflag',cFlag);
+
+                                let detailFlag = {
+                                    "detailFlag":0,
+                                }
+                                let dFlag = JSON.stringify(detailFlag);
+                                localStorage.setItem('dflag',dFlag);
+
                                 waiting.innerHTML=`Your Order is Placed`;
                                 animationImg.src="https://firebasestorage.googleapis.com/v0/b/digitalsignature-af550.appspot.com/o/Food%2FsuccessAnimation.gif?alt=media&token=ef8d0688-d93c-4038-964a-ab85b5e66fc3";
-                                location.replace("scrollbug.html");
+                                setTimeout(()=>{
+                                    alert(UserOrder);
+                                    location.replace("scrollbug.html");
+                                },3000);
+                                //location.replace("scrollbug.html");
                             }
                         }).catch((error)=>{
                             alert("Failed")
@@ -193,10 +230,14 @@
         }
 
         
-            
+        if((flagOne==1)&&(flagTwo==1)&&(flagThree==1)){
+            orderIndexGetVal();
+        }else{
+            location.replace("scrollbug.html");
+        }  
        
 
-        orderIndexGetVal();
+        
 
 
 </script>
