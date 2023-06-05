@@ -181,6 +181,13 @@
                 let billTotal = JSON.stringify(billAmount);
                 localStorage.setItem('billAmount',billTotal);
 
+
+                let cartFlag = {
+                    "cartFlag":1,
+                }
+                let cFlag = JSON.stringify(cartFlag);
+                localStorage.setItem('cflag',cFlag);
+
                 let account = Object.fromEntries(accounts);
                 let accountMap = JSON.stringify(account);
                 
@@ -206,6 +213,12 @@
                 console.log(newTot*sgstPercent);
                 let billTotal = JSON.stringify(billAmount);
                 localStorage.setItem('billAmount',billTotal);
+
+                let cartFlag = {
+                    "cartFlag":1,
+                }
+                let cFlag = JSON.stringify(cartFlag);
+                localStorage.setItem('cflag',cFlag);
 
                 let account = Object.fromEntries(accounts);
                 let accountMap = JSON.stringify(account);
