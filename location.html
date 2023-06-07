@@ -14,7 +14,7 @@
             document.addEventListener('DOMContentLoaded', function(event) {
 
             if (window.DeviceOrientationEvent) {
-              document.getElementById('notice').innerHTML = 'Working API detected';
+              
               window.addEventListener('deviceorientation', (eventData) => {
                 // gamma: Tilting the device from left to right. Tilting the device to the right will result in a positive value.
                 const tiltLR = eventData.gamma;
@@ -25,9 +25,7 @@
                 // Call the function to use the data on the page.
                 deviceOrientationHandler(tiltLR, tiltFB, dir);
               }, false);
-            } else {
-              document.getElementById('notice').innerHTML = 'No API detected'
-            };
+            } 
 
             function deviceOrientationHandler(tiltLR, tiltFB, dir) {
               let beta = Math.ceil(tiltFB);
@@ -35,6 +33,7 @@
               let alpha = Math.ceil(dir);
               let val1 = Number(beta);
               let val2 = Number(gamma);
+              alert(val1)
               if((val1<=50)&&(val1>=25)&&(val2<=10)&&(val2>=1)){
                 alert("Working");
               }else{
