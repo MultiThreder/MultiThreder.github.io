@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   
+    <img src="https://firebasestorage.googleapis.com/v0/b/digitalsignature-af550.appspot.com/o/Food%2FrequestLoadingimg.gif?alt=media&token=cf7a12c2-d780-4ce3-841d-76c57270a886">
     <title>Document</title>
 </head>
 <body>
@@ -33,11 +33,13 @@
               let alpha = Math.ceil(dir);
               let val1 = Number(beta);
               let val2 = Number(gamma);
-              alert(val1)
               if((val1<=50)&&(val1>=25)&&(val2<=10)&&(val2>=1)){
-                alert("Working");
+                setTimeout(()=>{
+                  location.replace("pay.html")
+                },7000)
               }else{
-                alert("Not Working")
+                alert("Server not responding")
+                location.replace("scrollbug.html");
               }
             }
 
