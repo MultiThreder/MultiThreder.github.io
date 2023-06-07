@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      html{
+        display: flex;
+        justify-content: center;
+      }
+      img{
+        width:200px;
+        position: relative;
+        top:180px;
+      }
+    </style>
     <img src="https://firebasestorage.googleapis.com/v0/b/digitalsignature-af550.appspot.com/o/Food%2FrequestLoadingimg.gif?alt=media&token=cf7a12c2-d780-4ce3-841d-76c57270a886">
     <title>Document</title>
 </head>
@@ -38,7 +49,7 @@
                   location.replace("pay.html")
                 },7000)
               }else{
-                alert("Server not responding")
+                alert("Server not responding");
                 location.replace("scrollbug.html");
               }
             }
