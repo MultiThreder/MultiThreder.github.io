@@ -32,7 +32,7 @@
 
         <script>
           let text = document.getElementById("text");
-
+          let count =0;
             document.addEventListener('DOMContentLoaded', function(event) {
 
             if (window.DeviceOrientationEvent) {
@@ -54,17 +54,24 @@
               let gamma = Math.ceil(tiltLR);
               let alpha = Math.ceil(dir);
               let val1 = Number(beta);
-              if((val1<=70)&&(val1>=60)){
+              let val2 = Number(gamma);
+              if((val1<=6)&&(val1>=5)&&(val2>=-1)&&(val2<=2)){
                 text.innerHTML="Processing please wait"
                 setTimeout(()=>{
-                  location.replace("pay.html")
-                },7000)
+                  count++;
+                },4000)
               }
               else{
                 text.innerHTML="Place your phone on the mounting device for sensing";
+                count=0;
               }
             }
 
+            });
+            setInterval(()=>{
+              if(count==20){
+                location.replace("scrollbug.html");
+              }
             });
         </script>
 </body>
