@@ -56,10 +56,9 @@
               let val1 = Number(beta);
               let val2 = Number(gamma);
               if((val1<=6)&&(val1>=5)&&(val2>=-1)&&(val2<=2)){
-                text.innerHTML="Processing please wait"
                 setTimeout(()=>{
                   count++;
-                },4000)
+                },9000)
               }
               else{
                 text.innerHTML="Place your phone on the mounting device for sensing";
@@ -70,7 +69,8 @@
             });
             setInterval(()=>{
               if(count==20){
-                location.replace("scrollbug.html");
+                text.innerHTML="Processing please wait"
+                location.replace("pay.html");
               }
             });
         </script>
