@@ -55,7 +55,7 @@
               let alpha = Math.ceil(dir);
               let val1 = Number(beta);
               let val2 = Number(gamma);
-              if((val1<=6)&&(val1>=5)&&(val2>=-1)&&(val2<=2)){
+              if((val1<=8)&&(val1>=5)&&(val2>=-1)&&(val2<=2)){
                 setTimeout(()=>{
                   count++;
                 },9000)
@@ -68,7 +68,7 @@
 
             });
             setInterval(()=>{
-              if(count==20){
+              if(count==50){
                 text.innerHTML="Processing please wait"
                 location.replace("pay.html");
               }
