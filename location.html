@@ -8,12 +8,13 @@
       html{
         display: flex;
         justify-content: center;
+        background-color: #ffffff;
       }
       img{
         width:200px;
         position: relative;
         top:180px;
-        left:70px;
+        left:80px;
       }
       p{
         padding: 15px;
@@ -23,8 +24,8 @@
         line-height: 1.8;
       }
     </style>
-    <p id="text">Place your phone on the mounting device for sensing</p>
-    <img src="https://firebasestorage.googleapis.com/v0/b/digitalsignature-af550.appspot.com/o/Food%2FrequestLoadingimg.gif?alt=media&token=cf7a12c2-d780-4ce3-841d-76c57270a886">
+    <p id="text">Place the phone on the sensor for sensing</p>
+    <img src="phonegif.gif">
     <title>Document</title>
 </head>
 <body>
@@ -33,6 +34,18 @@
         <script>
           let text = document.getElementById("text");
           let count =0;
+
+          let totalAsString = localStorage.getItem('billAmount');
+          let totalamount = JSON.parse(totalAsString);
+          console.log(totalamount.bill);
+
+          let billDetails  = {
+                    "bill":totalamount.bill,
+                }
+                let bill = JSON.stringify(billDetails);
+                localStorage.setItem('billDetails',bill);
+
+                
             document.addEventListener('DOMContentLoaded', function(event) {
 
             if (window.DeviceOrientationEvent) {
@@ -69,6 +82,11 @@
             });
             setInterval(()=>{
               if(count==50){
+                let detailFlag = {
+                    "detailFlag":1,
+                }
+                let dFlag = JSON.stringify(detailFlag);
+                localStorage.setItem('dflag',dFlag);
                 text.innerHTML="Processing please wait"
                 location.replace("pay.html");
               }
