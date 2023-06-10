@@ -54,6 +54,9 @@
 
         let totalAsString = localStorage.getItem('billDetails');
         let userDetail = JSON.parse(totalAsString);
+
+        let totalString = localStorage.getItem('tableDetails');
+        let tableDetail = JSON.parse(totalString);
                 
 
         let accountDetails = localStorage.getItem('accMap');
@@ -63,7 +66,7 @@
                
                
 
-        let UserOrder = `Table-${userDetail.table}-Name-${userDetail.name}-MobileNo-${userDetail.number}--Items---${totalamount.dishesOrdered}---Amt=${totalamount.total}---CGST=${totalamount.cgst}---SGST=${totalamount.sgst}---SC=${totalamount.fee}---Tot=${userDetail.bill}`
+        let UserOrder = `Table-${tableDetail.table}--Items---${totalamount.dishesOrdered}---Amt=${totalamount.total}---CGST=${totalamount.cgst}---SGST=${totalamount.sgst}---SC=${totalamount.fee}---Tot=${userDetail.bill}`
         console.log(UserOrder);
 
         let dbOrderIndexValue=0,dbFeeValue=0,dbCgstValue,dbSgstValue,dbTotalValue;
