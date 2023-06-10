@@ -33,6 +33,7 @@
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getDatabase();
+        
 
         let mFlag = localStorage.getItem('mflag');
         let menuFlag = JSON.parse(mFlag);
@@ -79,7 +80,7 @@
                 if(snapshot.exists()){
                     dbOrderIndexValue = snapshot.val().Value;
                     set(ref(db,"Orders/"+dbOrderIndexValue),{
-                        Value : UserOrder,
+                        Value : dbOrderIndexValue + UserOrder,
                         Status : "No",
                     }).then(()=>{
                         
@@ -211,7 +212,7 @@
                                 waiting.innerHTML=`Your Order is Placed`;
                                 animationImg.src="https://firebasestorage.googleapis.com/v0/b/digitalsignature-af550.appspot.com/o/Food%2FsuccessAnimation.gif?alt=media&token=ef8d0688-d93c-4038-964a-ab85b5e66fc3";
                                 setTimeout(()=>{
-                                    alert(UserOrder);
+                                    alert(dbOrderIndexValue + UserOrder);
                                     location.replace("scrollbug.html");
                                 },3000);
                                 //location.replace("scrollbug.html");
